@@ -1,0 +1,289 @@
+---
+title: Исследование вариативности в рутульском языке
+subtitle: для курса «Основные приложения математики», НИУ ВШЭ
+author: "Георгий Мороз \n\n Международная лаборатория языковой конвергенции \n\n НИУ ВШЭ"
+date: 10/18/2024
+date-format: D.MM.YYYY
+format: 
+  beamer:
+    theme: Singapore
+    mainfont: Brill
+    monofont: Iosevka
+    df-print: kable
+    pdf-engine: xelatex
+    cite-method: natbib
+    classoption: t
+    header-includes: |
+       \setbeamertemplate{footline}[page number]
+urlcolor: teal
+citecolor: teal
+echo: false
+fig-align: center
+bibliography: bibliography.bib
+editor_options: 
+  chunk_output_type: console
+abstract: |
+    Вопрос 1:
+    Вопрос 2:
+---
+
+```{r}
+#| include: false
+# setwd("/home/agricolamz/work/materials/2024.10.17_4_math_students")
+# https://docs.google.com/presentation/d/1krl0EwAel0hrsfK27sLrQB3QAAZRn3zP4At4nrZGI6Y/edit#slide=id.g2917cecae91_0_10
+
+library(tidyverse)
+theme_set(theme_minimal()+theme(text = element_text(size = 16), legend.position = "bottom"))
+```
+
+# Мифы о лингвистике
+
+## #тыжлингвист
+
+::: {.incremental}
+- знает как правильно: писать, употреблять слова/выражения, ...
+- умеет читать на всех письменностях мира
+- знает все языки на свете
+- умеет распознавать каждый язык на слух
+- может рассказать о происхождении каждого слова
+- не может разбираться в статистике и программировании
+- \Large все перечисленное выше --- чушь
+:::
+
+##  Обо мне
+
+- полевой исследователь (30 поездок, почти все на Кавказ)
+- фонетист, фонолог, квантитативный лингвист, занимаюсь линвистической географией
+- преподаю статистику и R (язык программирования)
+- написал несколько лингвистических пакетов для R
+    - [`lingtypology`](https://ropensci.github.io/lingtypology/)
+    - [`phonfieldwork`](https://docs.ropensci.org/phonfieldwork/)
+    - [`lingglosses`](https://github.com/agricolamz/lingglosses)
+
+## Прескриптивная vs. дескриптивная лингвистика
+
+- прескриптивная
+
+. . .   
+
+- вся остальная (дескриптивная)
+    - каталогизация языкового разнообразия, описание языковых контактов
+    - исследования и документация грамматики, фонетики и лексики конкретных языков
+    - исследования распределения грамматических/фонетических/лексических особенностей в языках мира
+    - исследования и документация исторических изменений грамматических/фонетических/лексических особенностей языков
+    - исследования когнитивных способностей человека и других животных, связанных с языком (усвоение, потеря языка и др.)
+    - языковые аспекты исследования мозга
+    - исследования в области синтеза и распознавания речи и языка
+    - исследования в области NLP, пробинг языковых моделей и т. п.
+    - ...
+
+## Прескриптивная vs. дескриптивная лингвистика
+
+Запишите где-нибудь, что изображено на картинке (рис. Т. Пановой).
+
+```{r}
+#| fig-align: "center"
+
+knitr::include_graphics("images/01_ladle.jpg")
+```
+
+## Прескриптивная vs. дескриптивная лингвистика
+
+Это часть опроса И. Левина 2021 года:
+
+```{r}
+#| out-width: 108%
+
+knitr::include_graphics("images/02_ladle_map.jpg")
+```
+
+```{r}
+#| out-height: 25%
+knitr::include_graphics("images/02_ladle_legend.png")
+```
+
+# Рутульский язык
+
+## Рутульский язык
+
+```{r}
+#| eval: false
+library(lingtypology)
+library(tidyverse)
+read_tsv("/home/agricolamz/work/databases/TALD/data/tald_villages.csv") |> 
+  filter(lang == "Avar" |
+           aff %in% c("Dargwa", "Lak", "Lezgic", "Khinalug", "Georgic", "Iranian", "Turkic")) |>
+  mutate(lang = case_when(lang == "Azerbaijani" ~ "North Azerbaijani",
+                          lang == "Agul" ~ "Aghul",
+                          lang == "Tsova-Tush" ~ "Bats",
+                          lang == "Tat" ~ "Judeo-Tat",
+                          TRUE ~ lang)) ->
+  df
+
+map.feature(df$lang,
+            features = df$default_level,
+            lat = df$lat,
+            longitude = df$lon,
+            label = df$village)
+```
+
+
+:::: {.columns}
+
+::: {.column width="50%"}
+- Лезгинская ветвь нахско-дагестанской семьи
+- Южный Дагестан
+- Число носителей
+    - 33 000 (по данным последней переписи)
+    - в селах Рутульского и Ахтынского района Республики Дагестан
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| out-width: 90%
+knitr::include_graphics("images/03_rutul_background.png")
+```
+
+:::
+
+::::
+
+## Рутульский язык
+
+```{r}
+#| eval: false
+df |> 
+  select(lang, rus_village, lat, lon) |>  
+  bind_rows(tibble(lang = "Rutul", 
+                   rus_village = "Кала", 
+                   lat = 41.577819, 
+                   lon = 47.3499843)) |> 
+  filter(lang == "Rutul",
+         !is.na(rus_village)) |> 
+  mutate(lat = if_else(rus_village == "Мюхрек", lat + 0.01, lat),
+         lon = if_else(rus_village == "Мюхрек", lon + 0.01, lon),
+         dialect = case_when(rus_village == 'Борч' ~ 'борчинско-хновский',
+                             rus_village == 'Хнов' ~ 'борчинско-хновский',
+                             rus_village == 'Ихрек' ~ 'ихрекский',
+                             rus_village == 'Куфа' ~ 'мухадский (литературный язык)',
+                             rus_village == 'Рутул' ~ 'мухадский (литературный язык)',
+                             rus_village == 'Киче' ~ 'мухадский (литературный язык)',
+                             rus_village == 'Джилихур' ~ 'мюхрекский',
+                             rus_village == 'Мюхрек' ~ 'мюхрекский',
+                             rus_village == 'Кина' ~ '“смешанные”',
+                             rus_village == 'Лучек' ~ '“смешанные”',
+                             rus_village == 'Амсар' ~ '“смешанные”',
+                             rus_village == 'Кала' ~ '“смешанные”',
+                             rus_village == 'Шиназ' ~ 'шиназский')) ->
+  rutul
+
+map.feature(rutul$lang,
+            lat = rutul$lat,
+            longitude = rutul$lon,
+            label = rutul$rus_village,
+            label.hide = FALSE, 
+            label.fsize = 20,
+            tile = 'Stadia.StamenTerrain')
+```
+
+
+:::: {.columns}
+
+::: {.column width="50%"}
+- Лезгинская ветвь нахско-дагестанской семьи
+- Южный Дагестан
+- Число носителей
+    - 33 000 (по данным последней переписи)
+    - в селах Рутульского и Ахтынского района Республики Дагестан
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| out-width: 95%
+knitr::include_graphics("images/04_rutul_villages.png")
+```
+
+:::
+
+::::
+
+## Традиционные диалекты
+
+:::: {.columns}
+
+::: {.column width="50%"}
+Пять традиционных диалектов [@ibragimov2004]:
+
+- ихрекский
+- борчинско-хновский
+- мюхрекский
+- шиназский
+- мухадский (литературный язык)
+
+Говоры остальных сел считаются “смешанными”.
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| out-width: 95%
+knitr::include_graphics("images/04_rutul_villages.png")
+```
+
+:::
+
+::::
+
+```{r}
+#| eval: false
+
+map.feature(rutul$lang,
+            features = rutul$dialect,
+            lat = rutul$lat,
+            longitude = rutul$lon,
+            label = rutul$rus_village,
+            label.hide = FALSE, 
+            label.fsize = 20,
+            width = 9,
+            tile = 'Stadia.StamenTerrain')
+```
+
+## Традиционные диалекты
+
+:::: {.columns}
+
+::: {.column width="50%"}
+Пять традиционных диалектов [@ibragimov2004]:
+
+- ихрекский
+- борчинско-хновский
+- мюхрекский
+- шиназский
+- мухадский (литературный язык)
+
+Говоры остальных сел считаются “смешанными”.
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| out-width: 95%
+knitr::include_graphics("images/05_rutul_dialects.png")
+```
+
+:::
+
+::::
+
+
+# Рутульская экспедиция
+
+# Атлас рутульских диалектов
+
+# Исследование вариативности
+
+# Список литературы {.allowframebreaks}
