@@ -676,7 +676,7 @@ knitr::include_graphics("images/19_neighbournet.png")
 
 ```{r}
 #| fig-align: center
-#| out-width: 75%
+#| out-width: 70%
 
 knitr::include_graphics("images/20_rutul_neighbournet.png")
 ```
@@ -727,7 +727,7 @@ knitr::include_graphics("images/23_regression.jpg")
 
 ```{r}
 #| fig-align: center
-#| out-width: 75%
+#| out-width: 70%
 
 knitr::include_graphics("images/24_graph.jpg")
 ```
