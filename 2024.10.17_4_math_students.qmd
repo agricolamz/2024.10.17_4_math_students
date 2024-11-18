@@ -131,6 +131,7 @@ map.feature(df$lang,
 :::: {.columns}
 
 ::: {.column width="50%"}
+
 - Лезгинская ветвь нахско-дагестанской семьи
 - Южный Дагестан
 - Число носителей
@@ -141,7 +142,7 @@ map.feature(df$lang,
 ::: {.column width="50%"}
 
 ```{r}
-#| out-width: 90%
+#| out-width: 109%
 knitr::include_graphics("images/03_rutul_background.png")
 ```
 
@@ -175,7 +176,20 @@ df |>
                              rus_village == 'Лучек' ~ '“смешанные”',
                              rus_village == 'Амсар' ~ '“смешанные”',
                              rus_village == 'Кала' ~ '“смешанные”',
-                             rus_village == 'Шиназ' ~ 'шиназский')) ->
+                             rus_village == 'Шиназ' ~ 'шиназский'),
+         dialect2 = case_when(rus_village == 'Борч' ~ 'западные',
+                              rus_village == 'Хнов' ~ 'западные',
+                              rus_village == 'Ихрек' ~ 'западные',
+                              rus_village == 'Куфа' ~ 'восточные',
+                              rus_village == 'Рутул' ~ 'восточные',
+                              rus_village == 'Киче' ~ 'восточные',
+                              rus_village == 'Джилихур' ~ 'восточные',
+                              rus_village == 'Мюхрек' ~ 'восточные',
+                              rus_village == 'Кина' ~ '“смешанные”',
+                              rus_village == 'Лучек' ~ '“смешанные”',
+                              rus_village == 'Амсар' ~ '“смешанные”',
+                              rus_village == 'Кала' ~ '“смешанные”',
+                              rus_village == 'Шиназ' ~ 'восточные')) ->
   rutul
 
 map.feature(rutul$lang,
@@ -191,6 +205,7 @@ map.feature(rutul$lang,
 :::: {.columns}
 
 ::: {.column width="50%"}
+
 - Лезгинская ветвь нахско-дагестанской семьи
 - Южный Дагестан
 - Число носителей
@@ -201,7 +216,7 @@ map.feature(rutul$lang,
 ::: {.column width="50%"}
 
 ```{r}
-#| out-width: 95%
+#| out-width: 109%
 knitr::include_graphics("images/04_rutul_villages.png")
 ```
 
@@ -209,11 +224,12 @@ knitr::include_graphics("images/04_rutul_villages.png")
 
 ::::
 
-## Традиционные диалекты
+## Традиционное диалектное членение
 
 :::: {.columns}
 
 ::: {.column width="50%"}
+
 Пять традиционных диалектов [@ibragimov2004]:
 
 - ихрекский
@@ -229,7 +245,7 @@ knitr::include_graphics("images/04_rutul_villages.png")
 ::: {.column width="50%"}
 
 ```{r}
-#| out-width: 95%
+#| out-width: 109%
 knitr::include_graphics("images/04_rutul_villages.png")
 ```
 
@@ -251,11 +267,12 @@ map.feature(rutul$lang,
             tile = 'Stadia.StamenTerrain')
 ```
 
-## Традиционные диалекты
+## Традиционное диалектное членение
 
 :::: {.columns}
 
 ::: {.column width="50%"}
+
 Пять традиционных диалектов [@ibragimov2004]:
 
 - ихрекский
@@ -271,7 +288,7 @@ map.feature(rutul$lang,
 ::: {.column width="50%"}
 
 ```{r}
-#| out-width: 95%
+#| out-width: 109%
 knitr::include_graphics("images/05_rutul_dialects.png")
 ```
 
@@ -279,6 +296,80 @@ knitr::include_graphics("images/05_rutul_dialects.png")
 
 ::::
 
+## Традиционное диалектное членение
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+Пять традиционных диалектов [@ibragimov2004]:
+
+- ихрекский
+- борчинско-хновский
+- мюхрекский
+- шиназский
+- мухадский (литературный язык)
+
+Говоры остальных сел считаются “смешанными”.
+
+Некоторые специалисты считают борчинско-хновский отдельным языком.
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| out-width: 109%
+knitr::include_graphics("images/05_rutul_dialects.png")
+```
+
+:::
+
+::::
+
+## Традиционное диалектное членение
+
+```{r}
+#| eval: false
+
+map.feature(rutul$lang,
+            features = rutul$dialect2,
+            lat = rutul$lat,
+            longitude = rutul$lon,
+            label = rutul$rus_village,
+            label.hide = FALSE, 
+            label.fsize = 20,
+            width = 9,
+            tile = 'Stadia.StamenTerrain')
+```
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+Также в [@ibragimov2004] выделяются:
+
+- Западная диалектная группа
+  - ихрекский
+  - борчинско-хновский
+- “Смешанные диалекты”
+- Восточная диалектная группа
+  - мюхрекский
+  - шиназский
+  - мухадский (основа литературного языка)
+  
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| out-width: 109%
+knitr::include_graphics("images/06_rutul_dialects2.png")
+```
+
+:::
+
+::::
 
 # Рутульская экспедиция
 
